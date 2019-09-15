@@ -1,13 +1,18 @@
 from app import app
 from flask import jsonify
 from flask import request
+from services import NLProcessing
 
-@app.route('/', methods=['POST'])
-def process_text():
-    return 'Foi minunu!'
+service = NLProcessing()
+
+
+@app.route('/gram/<n>/texts', methods=['POST'])
+def process_text(n):
+    return bad_request(400) if int(n) <= 0 else service.process_texts(request.json, int(n))
+
 
 @app.errorhandler(404)
-def not_found(error=None):
+def not_found():
     message = {
         'status': 404,
         'message': 'Not Found: ' + request.url,
@@ -17,8 +22,9 @@ def not_found(error=None):
 
     return resp
 
+
 @app.errorhandler(400)
-def bad_request(error=None):
+def bad_request():
     message = {
         'status': 400,
         'message': 'Bad Request: ' + request.url,
@@ -27,6 +33,7 @@ def bad_request(error=None):
     resp.status_code = 400
 
     return resp
+
 
 if __name__ == "__main__":
     app.run()
