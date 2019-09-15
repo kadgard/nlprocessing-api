@@ -7,12 +7,12 @@ class NLProcessing:
 
 
     def get_stopwords(self, language):
-        try:
+        if language:
             nltk.download('stopwords')
-            stop_words = nltk.corpus.stopwords.words(language)
-        except:
+            return nltk.corpus.stopwords.words(language)
+        else:
             return []
-        return stop_words
+
 
     def process_texts(self, texts: dict, n: int, language):
         stop_words = self.get_stopwords(language)
