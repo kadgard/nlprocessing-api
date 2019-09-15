@@ -18,7 +18,7 @@ class NLProcessing:
         stop_words = self.get_stopwords(language)
         texts_list = list(texts.values())
         keys = texts.keys()
-        vectorizer = CountVectorizer(ngram_range=(n, n), stop_words=stop_words)
+        vectorizer = CountVectorizer(ngram_range=(n, n), stop_words=stop_words, strip_accents='ascii')
         X = vectorizer.fit_transform(texts_list)
         word_matrix = X.toarray()
         processed_texts = {'word_vector_' + key: value.tolist() for key, value in zip(keys, word_matrix)}
