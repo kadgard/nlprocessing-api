@@ -1,14 +1,24 @@
 from sklearn.feature_extraction.text import CountVectorizer
+import nltk
 import json
 
 
 class NLProcessing:
 
-    def process_texts(self, texts: dict, n: int):
 
+    def get_stopwords(self, language):
+        try:
+            nltk.download('stopwords')
+            stop_words = nltk.corpus.stopwords.words(language)
+        except:
+            return []
+        return stop_words
+
+    def process_texts(self, texts: dict, n: int, language):
+        stop_words = self.get_stopwords(language)
         texts_list = list(texts.values())
         keys = texts.keys()
-        vectorizer = CountVectorizer(ngram_range=(n, n))
+        vectorizer = CountVectorizer(ngram_range=(n, n), stop_words=stop_words)
         X = vectorizer.fit_transform(texts_list)
         word_matrix = X.toarray()
         processed_texts = {'word_vector_' + key: value.tolist() for key, value in zip(keys, word_matrix)}

@@ -4,12 +4,13 @@ from flask import request
 from services import NLProcessing
 from validators import remove_non_strings
 
-service = NLProcessing()
-
 
 @app.route('/gram/<n>/texts', methods=['POST'])
 def process_text(n):
-    return bad_request(400) if int(n) <= 0 else service.process_texts(remove_non_strings(request.json), int(n))
+    service = NLProcessing()
+    language = request.args.get('language')
+    return bad_request(400) if int(n) <= 0 else service.process_texts(remove_non_strings(request.json),
+                                                                      int(n), language)
 
 
 @app.errorhandler(404)
