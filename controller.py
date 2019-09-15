@@ -2,13 +2,14 @@ from app import app
 from flask import jsonify
 from flask import request
 from services import NLProcessing
+from validators import remove_non_strings
 
 service = NLProcessing()
 
 
 @app.route('/gram/<n>/texts', methods=['POST'])
 def process_text(n):
-    return bad_request(400) if int(n) <= 0 else service.process_texts(request.json, int(n))
+    return bad_request(400) if int(n) <= 0 else service.process_texts(remove_non_strings(request.json), int(n))
 
 
 @app.errorhandler(404)
